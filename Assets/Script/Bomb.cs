@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SocialPlatforms;
+using UnityEngine.UIElements;
+
+public class Bomb : MonoBehaviour
+{
+    public GameObject _beam;
+    public GameObject _beamEnd;
+
+    private BoxCollider2D _boxCollider;
+    private float _countdown = 0.0f; 
+    public float _timer = 2.0f;
+
+    [field: SerializeField] public float Range {get; set;} = 1;
+
+    void Awake()
+    {
+        _boxCollider = GetComponent<BoxCollider2D>();
+        _boxCollider.enabled = false;
+        _countdown = 0.0f;
+    }
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(!_boxCollider.enabled)
+        {
+            if((PlayerMovementController.Instance.transform.position - transform.position) .sqrMagnitude > 1.0f)
+            _boxCollider.enabled = true;
+            
+        }
+
+        _countdown+= Time.deltaTime;
+        if(_countdown > _timer)
+        {
+            Explode();
+        }
+    }
+
+    private void Explode()
+    {
+        Detonate();
+        Destroy(gameObject);
+    }
+
+    private void Detonate()
+    {
+        Spread(Vector2.up);
+        Spread(Vector2.down);
+        Spread(Vector2.left);
+        Spread(Vector2.right);
+    }
+
+    private void Spread(Vector2 dir)
+    {
+        Vector2 origin = transform.position;
+        Vector2 pos = origin + dir * Range;
+        InstantiateBeam(pos, dir, true);
+
+        int i = 1;
+
+        while((pos - origin) .magnitude > 1.0f)
+        {
+            pos -= i * dir;
+            InstantiateBeam(pos, dir, false);
+        }
+    }
+
+    private void InstantiateBeam(Vector2 pos, Vector2 dir, bool end)
+    {
+        Quaternion quat = Quaternion.identity;
+        if(dir == Vector2.up)
+        {
+            quat = Quaternion.Euler( 0, 0, -90.0f);
+        }
+           
+        if(dir == Vector2.down)
+        {
+            quat = Quaternion.Euler( 0, 0, 90.0f);
+        }
+           
+        if(dir == Vector2.right)
+        {
+            quat = Quaternion.Euler( 0, 0, 180.0f);
+        }
+           
+        Instantiate(end? _beamEnd : _beam, pos, quat);
+    
+        
+    }
+}
