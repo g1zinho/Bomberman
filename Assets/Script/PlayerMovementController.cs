@@ -21,6 +21,7 @@ public class PlayerMovementController : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private static readonly int Walking = Animator.StringToHash("Walking");
+    
 
     void Awake()
     {
@@ -80,6 +81,8 @@ public class PlayerMovementController : MonoBehaviour
 {
     if (ctx.performed)
     {
+        // Set Walking animation to true
+        _animator.SetBool(Walking, true);
         Vector2 input = ctx.ReadValue<Vector2>();
 
         // Normalize to -1, 0, or 1
@@ -94,8 +97,7 @@ public class PlayerMovementController : MonoBehaviour
 
         Snap();
 
-        // Set Walking animation to true
-        _animator.SetBool(Walking, false);
+        
     }
 
     if (ctx.canceled)
@@ -104,7 +106,8 @@ public class PlayerMovementController : MonoBehaviour
         Snap();
 
         // Set Walking animation to false
-        _animator.SetBool(Walking, true);
+        _animator.SetBool(Walking, false);
+        Debug.Log("show error");
     }
 }
 
