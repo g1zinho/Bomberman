@@ -64,18 +64,20 @@ public class PlayerMovementController : MonoBehaviour
         
     }
 
-    public void OnBomb(InputAction.CallbackContext ctx)
-
-    //bomb spwamn
+public void OnBomb(InputAction.CallbackContext ctx)
+{
+    if (ctx.canceled)
     {
-        if(ctx.canceled)
-        {
-            Vector3 pos = transform.position;
-            Vector3 bombPos = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y) + 0.5f, pos.z);
-            Instantiate(_BombPrefab, bombPos, Quaternion.identity);
+        Vector3 pos = transform.position;
 
-        }
+        // Snap to nearest tile center
+        float snappedX = Mathf.Round(pos.x - 0.5f) + 0.6f;
+        float snappedY = Mathf.Round(pos.y - 0.5f) + 0.5f;
+
+        Vector3 bombPos = new Vector3(snappedX, snappedY, 0f);
+        Instantiate(_BombPrefab, bombPos, Quaternion.identity);
     }
+}
 
     public void OnMove(InputAction.CallbackContext ctx)
 {
