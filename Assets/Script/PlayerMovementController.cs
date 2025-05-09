@@ -97,7 +97,6 @@ public void OnBomb(InputAction.CallbackContext ctx)
             transform.localScale = new Vector3(_initialScale.x * Mathf.Sign(_moveDir.x), _initialScale.y, _initialScale.z);
         }
 
-        Snap();
 
         
     }
@@ -105,7 +104,6 @@ public void OnBomb(InputAction.CallbackContext ctx)
     if (ctx.canceled)
     {
         _moveDir = Vector2.zero;
-        Snap();
 
         // Set Walking animation to false
         _animator.SetBool(Walking, false);
@@ -113,26 +111,5 @@ public void OnBomb(InputAction.CallbackContext ctx)
     }
 }
 
-    private void Snap()
-    {
-        //better collision to the blocks
-        float x = _rigidbody.position.x;
-        float y = _rigidbody.position.y;
 
-        bool roundX = false;
-        bool roundY = false;
-
-        float xSnapTo = Mathf.Round(Mathf.Abs(x));
-        if (Mathf.Abs(x) < xSnapTo + _snapError &&
-            Mathf.Abs(x) > xSnapTo - _snapError &&
-            _moveDir.x == 0)
-            roundX = true;
-            float ySnapTo = Mathf.Round(Mathf.Abs(y));
-        if (Mathf.Abs(y) < xSnapTo + _snapError &&
-            Mathf.Abs(y) > xSnapTo - _snapError &&
-            _moveDir.y == 0)
-            roundX = true;
-
-            _rigidbody.position = new Vector2(roundX ? Mathf.Round(x) : x, roundY ? Mathf.Round(y) : y );
-    }
 }
