@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 
-public class Bomb : MonoBehaviour
+public class Bomb : Breakable
 {
     public GameObject _beam;
     public GameObject _beamEnd;
@@ -47,7 +47,7 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    private void Explode()
+    protected override void Explode()
     {
         Detonate();
         Destroy(gameObject);
