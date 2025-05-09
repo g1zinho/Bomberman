@@ -104,7 +104,8 @@ public class Bomb : Breakable
         else if(hitBreakable)
         {
             float dist = (breakableHit.point - origin).magnitude;
-            Vector2 pos = (wallHit.point + dir * 0.5f);
+            
+            Vector2 pos =  breakableHit.point + dir * 0.5f;
             InstantiateBeam(pos, dir, true);
 
         
