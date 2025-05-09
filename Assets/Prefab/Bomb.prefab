@@ -177,5 +177,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _beam: {fileID: 7531342448432213767, guid: 3da51b64c0bb4fd42b5ac036acb48c52, type: 3}
   _beamEnd: {fileID: 7658204949650009980, guid: 22e2eec26aacc4041be10355387cd55d, type: 3}
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _BreakableLayer:
+    serializedVersion: 2
+    m_Bits: 128
   _timer: 2
   <Range>k__BackingField: 2

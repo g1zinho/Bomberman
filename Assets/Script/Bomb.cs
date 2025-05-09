@@ -9,6 +9,9 @@ public class Bomb : MonoBehaviour
     public GameObject _beam;
     public GameObject _beamEnd;
 
+    [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private LayerMask _BreakableLayer;
+
     private BoxCollider2D _boxCollider;
     private float _countdown = 0.0f; 
     public float _timer = 2.0f;
@@ -60,17 +63,68 @@ public class Bomb : MonoBehaviour
 
     private void Spread(Vector2 dir)
     {
+
         Vector2 origin = transform.position;
-        Vector2 pos = origin + dir * Range;
-        InstantiateBeam(pos, dir, true);
 
-        int i = 1;
+        RaycastHit2D wallHit = Physics2D.Raycast(origin, dir, Range, _wallLayer);
+        RaycastHit2D breakableHit = Physics2D.Raycast(origin, dir, Range, _BreakableLayer);
+        bool hitWall = wallHit.collider;
+        bool hitBreakable = wallHit.collider;
 
-        while((pos - origin) .magnitude > 1.0f)
+        if(hitBreakable && hitWall)
         {
-            pos -= i * dir;
-            InstantiateBeam(pos, dir, false);
+            if(wallHit.distance < breakableHit.distance)
+            {
+                hitBreakable = false;
+            }
+
+            else
+            {
+                hitWall = true;
+            }
         }
+        
+        if (hitWall)
+        {
+            float dist = (wallHit.point - origin).magnitude;
+            if (dist <= 1.0f)
+            { 
+                return;
+            }
+
+            Vector2 pos = (wallHit.point - dir * 0.5f);
+            InstantiateBeam(pos, dir, true);
+
+            for(int i = 1; i < dist - 1; ++i)
+            {
+                InstantiateBeam(pos -i *dir, dir, false);
+            }
+
+        }
+        else if(hitBreakable)
+        {
+            float dist = (breakableHit.point - origin).magnitude;
+            Vector2 pos = (wallHit.point + dir * 0.5f);
+            InstantiateBeam(pos, dir, true);
+
+        
+              for(int i = 1; i < dist - 1; ++i)
+            {
+                InstantiateBeam(pos -i *dir, dir, false);
+            }
+        }
+        else {
+            Vector2 pos = (Vector2)transform.position + dir * Range;
+            InstantiateBeam(pos, dir, true);
+
+            int i = 1;
+            while((pos - (Vector2)transform.position).magnitude > 1.0f)
+            {
+                pos -= i * dir;
+                InstantiateBeam(pos, dir, false);
+            }
+        }
+    
     }
 
     private void InstantiateBeam(Vector2 pos, Vector2 dir, bool end)
