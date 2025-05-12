@@ -16,7 +16,7 @@ public class Bomb : Breakable
     private float _countdown = 0.0f; 
     public float _timer = 2.0f;
 
-    [field: SerializeField] public float Range {get; set;} = 1;
+    public static float Range {get; set;} = 1;
 
     void Awake()
     {
@@ -68,8 +68,8 @@ public class Bomb : Breakable
 
         RaycastHit2D wallHit = Physics2D.Raycast(origin, dir, Range, _wallLayer);
         RaycastHit2D breakableHit = Physics2D.Raycast(origin, dir, Range, _BreakableLayer);
-        bool hitWall = wallHit.collider;
-        bool hitBreakable = wallHit.collider;
+          bool hitWall      = wallHit.collider      != null;
+          bool hitBreakable = breakableHit.collider != null; 
 
         if(hitBreakable && hitWall)
         {
