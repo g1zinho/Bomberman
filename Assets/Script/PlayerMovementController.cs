@@ -15,12 +15,14 @@ public class PlayerMovementController : MonoBehaviour
     public float _snapError = 0.5f;
 
     public GameObject _BombPrefab;
+    public PlayerInput _playerInput;
     private Vector3 _initialScale;
 
     private Vector2 _moveDir = Vector2.zero;
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private static readonly int Walking = Animator.StringToHash("Walking");
+    private static readonly int Death = Animator.StringToHash("Death");
     
 
     void Awake()
@@ -50,12 +52,6 @@ public class PlayerMovementController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _initialScale = transform.localScale;
         _rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void FixedUpdate()
@@ -96,7 +92,7 @@ public void OnBomb(InputAction.CallbackContext ctx)
         {
             transform.localScale = new Vector3(_initialScale.x * Mathf.Sign(_moveDir.x), _initialScale.y, _initialScale.z);
         }
-
+    
 
         
     }
@@ -107,9 +103,27 @@ public void OnBomb(InputAction.CallbackContext ctx)
 
         // Set Walking animation to false
         _animator.SetBool(Walking, false);
-        Debug.Log("show error");
     }
-}
+}  
+
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Explosion"))
+        {
+            Die();
+
+        }
+   }
+
+   private void Die()
+   {
+       _animator.SetTrigger(Death);
+       _playerInput.currentActionMap.Disable();
+   }
+
+
+
 
 
 }
